@@ -25,7 +25,7 @@ done
 XSOCK=/tmp/.X11-unix
 XAUTH=$HOME/.Xauthority
 
-docker pull georgno/sjtu_drone:ros2-${ROS_DISTRO}
+docker pull georgno/simple_drone:ros2-${ROS_DISTRO}
 
 if [ $? -ne 0 ]; then
     exit 1
@@ -43,6 +43,6 @@ docker run \
     --env=QT_X11_NO_MITSHM=1 \
     --privileged \
     --net=host \
-    --name="sjtu_drone" \
-    georgno/sjtu_drone:ros2-${ROS_DISTRO}
+    --name="simple_drone" \
+    georgno/simple_drone:ros2-${ROS_DISTRO}
 xhost -local:docker

@@ -100,6 +100,6 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/sjtu_drone:ros2-${{ matrix.ros_distribution }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/simple_drone:ros2-${{ matrix.ros_distribution }}
           build-args: |
             ROS_DISTRO=${{ matrix.ros_distribution }}

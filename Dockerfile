@@ -21,9 +21,9 @@ RUN echo "deb http://packages.osrfoundation.org/gazebo/ubuntu `lsb_release -cs` 
 RUN rosdep init && rosdep update
 
 RUN mkdir -p /ros2_ws/src
-COPY ./sjtu_drone_description /ros2_ws/src/sjtu_drone_description
-COPY ./sjtu_drone_bringup /ros2_ws/src/sjtu_drone_bringup
-COPY ./sjtu_drone_control /ros2_ws/src/sjtu_drone_control
+COPY ./simple_drone_description /ros2_ws/src/simple_drone_description
+COPY ./simple_drone_bringup /ros2_ws/src/simple_drone_bringup
+COPY ./simple_drone_control /ros2_ws/src/simple_drone_control
 
 RUN curl -L https://github.com/osrf/gazebo_models/archive/refs/heads/master.zip -o /tmp/gazebo_models.zip \
     && unzip /tmp/gazebo_models.zip -d /tmp && mkdir -p ~/.gazebo/models/ && mv /tmp/gazebo_models-master/* ~/.gazebo/models/ \
@@ -35,4 +35,4 @@ RUN /bin/bash -c 'cd /ros2_ws/ \
     && rosdep install --from-paths src --ignore-src -r -y \
     && colcon build'
 
-CMD ["/bin/bash", "-c", "source /opt/ros/${ROS_DISTRO}/setup.bash && source /ros2_ws/install/setup.bash && ros2 launch sjtu_drone_bringup sjtu_drone_bringup.launch.py"]
+CMD ["/bin/bash", "-c", "source /opt/ros/${ROS_DISTRO}/setup.bash && source /ros2_ws/install/setup.bash && ros2 launch simple_drone_bringup simple_drone_bringup.launch.py"]
