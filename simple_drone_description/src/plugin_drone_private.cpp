@@ -45,6 +45,7 @@ void DroneSimpleControllerPrivate::Reset()
 void DroneSimpleControllerPrivate::InitSubscribers(
   std::string cmd_normal_topic_,
   std::string posctrl_topic_,
+  std::string laser_scan_topic_,
   std::string imu_topic_,
   std::string takeoff_topic_,
   std::string land_topic_,
@@ -67,6 +68,17 @@ void DroneSimpleControllerPrivate::InitSubscribers(
       std::bind(&DroneSimpleControllerPrivate::PosCtrlCallback, this, std::placeholders::_1));
   } else {
     RCLCPP_ERROR(ros_node_->get_logger(), "No position control defined!");
+  }
+
+  // subscribe laser_scan
+  if (!laser_scan_topic_.empty()) {
+    RCLCPP_INFO(ros_node_->get_logger(), "=========================");
+    RCLCPP_INFO(ros_node_->get_logger(), "The laser scan subscribed!!!!");
+    laser_scan_subscriber_ = ros_node_->create_subscription<sensor_msgs::msg::LaserScan>(
+      laser_scan_topic_, qos,
+      std::bind(&DroneSimpleControllerPrivate::LaserScanCallback, this, std::placeholders::_1));
+  } else {
+    RCLCPP_ERROR(ros_node_->get_logger(), "No imu topic defined!");
   }
 
   // subscribe imu
@@ -248,6 +260,16 @@ void DroneSimpleControllerPrivate::CmdCallback(const geometry_msgs::msg::Twist::
 void DroneSimpleControllerPrivate::PosCtrlCallback(const std_msgs::msg::Bool::SharedPtr cmd)
 {
   m_posCtrl = cmd->data;
+}
+
+/**
+* @brief Callback function to handle LaserScan sensor data.
+* @param laser_scan Shared pointer to LaserScan sensor data.
+* The function reads the quaternion data from the LaserScan sensor and updates the orientation and angular velocity of the drone.
+*/
+void DroneSimpleControllerPrivate::LaserScanCallback(const sensor_msgs::msg::LaserScan::SharedPtr laser_scan)
+{
+  RCLCPP_INFO(ros_node_->get_logger(), "The laser scan reports!");
 }
 
 /**

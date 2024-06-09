@@ -14,6 +14,7 @@ def get_teleop_controller(_context, *_, **kwargs) -> Node:
         namespace=kwargs["model_ns"],
         output="screen",
         prefix="xterm -e",
+        arguments=['--ros-args', '--log-level', 'DEBUG'],
     )]
 
 def generate_launch_description():

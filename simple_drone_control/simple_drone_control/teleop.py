@@ -1,6 +1,7 @@
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Twist, Vector3
+from sensor_msgs.msg import LaserScan
 from std_msgs.msg import Empty
 import sys
 import termios

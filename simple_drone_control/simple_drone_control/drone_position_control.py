@@ -1,6 +1,6 @@
 import rclpy
 
-from drone_utils.drone_object import DroneObject
+from .drone_utils.drone_object import DroneObject
 
 class DronePositionControl(DroneObject):
     def __init__(self):
@@ -14,7 +14,7 @@ class DronePositionControl(DroneObject):
         self.get_logger().info('Position control mode set to True')
 
         # Send a command to move the drone to a defined pose
-        self.move_drone_to_pose(10.0, 2.0, 5.0)  # Example pose coordinates
+        # self.move_drone_to_pose(10.0, 2.0, 5.0)  # Example pose coordinates
 
     def move_drone_to_pose(self, x, y, z):
         # Override the move_drone_to_pose method if specific behavior is needed

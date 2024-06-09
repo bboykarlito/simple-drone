@@ -1,7 +1,7 @@
 from rclpy.node import Node
 from std_msgs.msg import Empty, Bool, Int8, String
 from geometry_msgs.msg import Twist, Pose, Vector3
-from sensor_msgs.msg import Range, Image, Imu
+from sensor_msgs.msg import Range, Image, Imu, LaserScan
 
 STATES = {
     0: "Landed",
@@ -30,10 +30,11 @@ class DroneObject(Node):
         self.pubLand = self.create_publisher(Empty, '~/land', 1024)
         self.pubReset = self.create_publisher(Empty, '~/reset', 1024)
         self.pubPosCtrl = self.create_publisher(Bool, '~/posctrl', 1024)
-        self.pubCmd = self.create_publisher(Twist, '~/cmd_vel', 1024)
+        self.pubCmd = self.create_publisher(Twist, '/simple_drone/cmd_vel', 1024)
         self.pubVelMode = self.create_publisher(Bool, '~/dronevel_mode', 1024)
 
         # Subscribers
+        self.sub_laser = self.create_subscription(LaserScan, '/simple_drone/laser_scan/out', self.cb_laser_scan, 1024)
         self.sub_sonar = self.create_subscription(Range, '~/sonar', self.cb_sonar, 1024)
         self.sub_imu = self.create_subscription(Range, '~/imu', self.cb_imu, 1024)
         self.sub_front_img = self.create_subscription(Image, '~/front/image_raw',
@@ -49,9 +50,6 @@ class DroneObject(Node):
         self._front_img = Image()
         self._bottom_img = Image()
         self._gt_pose = Pose()
-
-        while self.pubTakeOff.get_subscription_count() == 0:
-            self.logger.info("Waiting for drone to spawn", throttle_duration_sec=1)
 
     @property
     def state(self):
@@ -146,6 +144,7 @@ class DroneObject(Node):
         Hover the drone
         :return: True if the command was sent successfully, False if drone is not flying
         """
+        self.logger.info("Hover!")
         if not self.isFlying:
             return False
         twist_msg = Twist()
@@ -289,6 +288,14 @@ class DroneObject(Node):
         twist_msg.angular.z = speed
         self.pubCmd.publish(twist_msg)
         return True
+
+    def cb_laser_scan(self, msg: LaserScan):
+        min = 1.0
+        for i in range(200):
+            current = msg.ranges[i]
+            if current < min:
+                self.logger.info("Distance is: " + str(current))
+                self.hover()
 
     def cb_sonar(self, msg: Range):
         """Callback for the sonar sensor"""

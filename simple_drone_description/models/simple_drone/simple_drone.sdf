@@ -31,6 +31,34 @@
           </mesh>
         </geometry>
       </visual>
+      <sensor name="sensor_ray" type="ray">
+        <always_on>1</always_on>
+        <visualize>1</visualize>
+        <update_rate>100.0</update_rate>
+        <pose>0 0 0 0 0 0</pose>
+        <ray>
+          <scan>
+            <horizontal>
+              <samples>200</samples>
+              <resolution>1.0</resolution>
+              <min_angle>-0.1</min_angle>
+              <max_angle>0.1</max_angle>
+            </horizontal>
+          </scan>
+          <range>
+            <min>0.05</min>
+            <max>5.0</max>
+          </range>
+        </ray>
+        <plugin name="laser_scan" filename="libgazebo_ros_ray_sensor.so">
+          <ros>
+            <namespace>/simple_drone</namespace>
+          </ros>
+          <initial_orientation_as_reference>0</initial_orientation_as_reference>
+          <frame_name>simple_drone/base_link</frame_name>
+          <output_type>sensor_msgs/LaserScan</output_type>
+        </plugin>
+      </sensor>
       <sensor name='sensor_imu' type='imu'>
         <always_on>1</always_on>
         <visualize>1</visualize>

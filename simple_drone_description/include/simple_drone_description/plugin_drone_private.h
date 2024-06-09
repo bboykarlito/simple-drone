@@ -15,6 +15,7 @@
 #include <geometry_msgs/msg/pose.hpp>
 #include <geometry_msgs/msg/transform_stamped.hpp>
 #include <sensor_msgs/msg/imu.hpp>
+#include <sensor_msgs/msg/laser_scan.hpp>
 #include <std_msgs/msg/empty.hpp>
 #include <std_msgs/msg/bool.hpp>
 #include <std_msgs/msg/string.hpp>
@@ -44,10 +45,15 @@ public:
 
   void Reset();
   void InitSubscribers(
-    std::string cmd_normal_topic_ = "cmd_vel", std::string posctrl_topic_ = "posctrl",
-    std::string imu_topic_ = "imu", std::string takeoff_topic_ = "takeoff",
-    std::string land_topic_ = "land", std::string reset_topic_ = "reset",
-    std::string switch_mode_topic_ = "dronevel_mode");
+    std::string cmd_normal_topic_ = "cmd_vel",
+    std::string posctrl_topic_ = "posctrl",
+    std::string laser_scan_topic_ = "/simple_drone/laser_scan/out",
+    std::string imu_topic_ = "imu",
+    std::string takeoff_topic_ = "takeoff",
+    std::string land_topic_ = "land",
+    std::string reset_topic_ = "reset",
+    std::string switch_mode_topic_ = "dronevel_mode"
+  );
   void InitPublishers(
     std::string gt_topic_ = "gt_pose", std::string gt_vel_topic_ = "gt_vel",
     std::string gt_acc_topic_ = "gt_acc", std::string cmd_mode_topic_ = "cmd_mode",
@@ -94,6 +100,7 @@ private:
   // Callbacks
   void CmdCallback(const geometry_msgs::msg::Twist::SharedPtr cmd);
   void PosCtrlCallback(const std_msgs::msg::Bool::SharedPtr cmd);
+  void LaserScanCallback(const sensor_msgs::msg::LaserScan::SharedPtr laser_scan);
   void ImuCallback(const sensor_msgs::msg::Imu::SharedPtr imu);
   void TakeoffCallback(const std_msgs::msg::Empty::SharedPtr msg);
   void LandCallback(const std_msgs::msg::Empty::SharedPtr msg);
@@ -127,6 +134,7 @@ private:
   // Subscribers
   rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr cmd_subscriber_{nullptr};
   rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr posctrl_subscriber_{nullptr};
+  rclcpp::Subscription<sensor_msgs::msg::LaserScan>::SharedPtr laser_scan_subscriber_{nullptr};
   rclcpp::Subscription<sensor_msgs::msg::Imu>::SharedPtr imu_subscriber_{nullptr};
   rclcpp::Subscription<std_msgs::msg::Empty>::SharedPtr takeoff_subscriber_{nullptr};
   rclcpp::Subscription<std_msgs::msg::Empty>::SharedPtr land_subscriber_{nullptr};
